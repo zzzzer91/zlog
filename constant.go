@@ -7,8 +7,8 @@ func (e entityFieldNameType) String() string {
 }
 
 const (
-	EntityFieldNameTraceID    entityFieldNameType = "traceId"
-	EntityFieldNameRequestID  entityFieldNameType = "requestId"
+	EntityFieldNameTraceID    entityFieldNameType = "traceID"
+	EntityFieldNameRequestID  entityFieldNameType = "requestID"
 	EntityFieldNameError      entityFieldNameType = "error"
 	EntityFieldNameErrorStack entityFieldNameType = "errorStack"
 )
