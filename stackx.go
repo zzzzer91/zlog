@@ -8,7 +8,7 @@ import (
 
 // RecordStackTrace 获取当前调用栈，返回字符串
 func RecordStackTrace(skip int) string {
-	return CallersFrames2Str(GetCallersFrames(skip + 1))
+	return CallersFrames2Str(GetCallersFrames(skip + 2))
 }
 
 // GetCallersFrames 获取当前调用栈

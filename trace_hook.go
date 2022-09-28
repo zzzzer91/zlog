@@ -69,7 +69,7 @@ func (h *TraceHook) Fire(entry *logrus.Entry) error {
 				))
 			} else {
 				opts = append(opts, trace.WithAttributes(
-					semconv.ExceptionStacktraceKey.String(RecordStackTrace(10)),
+					semconv.ExceptionStacktraceKey.String(RecordStackTrace(7)),
 				))
 			}
 			span.AddEvent(semconv.ExceptionEventName, opts...)
