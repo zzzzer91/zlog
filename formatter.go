@@ -53,6 +53,7 @@ func (f *selfFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	_ = sonic.ConfigDefault.NewEncoder(entry.Buffer).Encode(ls)
 	entry.Buffer.WriteByte('\n')
 	ls.reset()
+	logStructPool.Put(ls)
 	return entry.Buffer.Bytes(), nil
 }
 
