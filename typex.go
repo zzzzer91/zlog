@@ -5,7 +5,7 @@ import (
 	"reflect"
 )
 
-func TypeStr(i any) string {
+func TypeStr(i interface{}) string {
 	t := reflect.TypeOf(i)
 	if t.PkgPath() == "" && t.Name() == "" {
 		// Likely a builtin type.

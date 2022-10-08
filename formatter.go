@@ -25,7 +25,7 @@ type logStruct struct {
 
 var (
 	logStructPool = sync.Pool{
-		New: func() any {
+		New: func() interface{} {
 			return &logStruct{}
 		},
 	}
