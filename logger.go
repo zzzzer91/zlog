@@ -32,18 +32,17 @@ func NewLogger(config *LoggerConfig, hooks ...logrus.Hook) *logrus.Logger {
 			MaxAge:     config.FileConfig.MaxAge,
 		})
 	}
-	l := &logrus.Logger{
-		Out: io.MultiWriter(writers...),
-		Formatter: &selfFormatter{
-			timeFormat: "2006-01-02 15:04:05.000",
-		},
-		Level:        logrus.Level(config.Level),
-		ReportCaller: true,
-	}
+	l := logrus.New()
+	l.SetNoLock()
+	l.SetLevel(logrus.Level(config.Level))
+	l.SetFormatter(&selfFormatter{
+		timeFormat: "2006-01-02 15:04:05.000",
+	})
+	l.SetReportCaller(true)
+	l.SetOutput(io.MultiWriter(writers...))
 	for _, hook := range hooks {
 		l.AddHook(hook)
 	}
-	l.SetNoLock()
 	return l
 }
 
