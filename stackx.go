@@ -2,9 +2,9 @@ package zlog
 
 import (
 	"bytes"
-	"fmt"
 	"os"
 	"runtime"
+	"strconv"
 	"strings"
 )
 
@@ -37,24 +37,26 @@ func CallersFrames2Str(callersFrames *runtime.Frames) string {
 	var lines [][]byte
 	var lastFile string
 	for f, again := callersFrames.Next(); again; f, again = callersFrames.Next() {
-		// Print this much at least.  If we can't find the source, it won't show.
-		fmt.Fprintf(sb, "%s:%d (0x%x)\n", f.File, f.Line, f.PC)
-		sb.WriteByte('\t')
 		sb.Write(function(f.PC))
 		if f.File != lastFile {
 			data, err := os.ReadFile(f.File)
 			if err == nil {
 				lines = bytes.Split(data, []byte{'\n'})
 				lastFile = f.File
-				sb.Write([]byte(": "))
+				sb.WriteString(": ")
 				sb.Write(source(lines, f.Line))
 			}
 		} else {
 			if len(lines) > 0 {
-				sb.Write([]byte(": "))
+				sb.WriteString(": ")
 				sb.Write(source(lines, f.Line))
 			}
 		}
+		sb.WriteByte('\n')
+		sb.WriteByte('\t')
+		sb.WriteString(f.File)
+		sb.WriteByte(':')
+		sb.WriteString(strconv.Itoa(f.Line))
 		sb.WriteByte('\n')
 	}
 	return sb.String()
