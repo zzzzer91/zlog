@@ -15,7 +15,7 @@ type errCauser interface {
 	Cause() error
 }
 
-// getCallersFrames 尝试获取 err 的错误栈
+// getCallersFrames try to get error's stack.
 func getCallersFrames(err error) *runtime.Frames {
 	stackTracer := tryFindErrStackTacker(err)
 	if stackTracer == nil {
@@ -25,7 +25,7 @@ func getCallersFrames(err error) *runtime.Frames {
 	return runtime.CallersFrames(*(*[]uintptr)(unsafe.Pointer(&st)))
 }
 
-// tryFindErrStackTacker 递归寻找最后一个实现了 errStackTracer 接口的 err
+// tryFindErrStackTacker try to find last err that implements errStackTracer.
 func tryFindErrStackTacker(err error) errStackTracer {
 	var st errStackTracer
 	for err != nil {
