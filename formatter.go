@@ -61,12 +61,13 @@ func (f *selfFormatter) exactErrorField(data logrus.Fields) string {
 	if len(data) == 0 {
 		return ""
 	}
-	errInfo, ok := data[EntityFieldNameError.String()]
-	if ok {
-		callersFramesStr := CallersFrames2Str(getCallersFrames(errInfo.(error)))
-		if len(callersFramesStr) > 0 {
-			// 放入 entry.Data
-			data[EntityFieldNameErrorStack.String()] = callersFramesStr
+	if errInfo, ok := data[EntityFieldNameError.String()]; ok {
+		if _, ok := data[EntityFieldNameErrorStack.String()]; !ok {
+			callersFramesStr := CallersFrames2Str(getCallersFrames(errInfo.(error)))
+			if callersFramesStr != "" {
+				// 放入 entry.Data
+				data[EntityFieldNameErrorStack.String()] = callersFramesStr
+			}
 		}
 		return fmt.Sprintf("%s", errInfo)
 	}
