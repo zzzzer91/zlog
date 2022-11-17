@@ -40,8 +40,12 @@ func NewLogger(config *LoggerConfig, hooks ...logrus.Hook) *logrus.Logger {
 	l := logrus.New()
 	l.SetNoLock()
 	l.SetLevel(logrus.Level(config.Level))
+	timeFormat := defaultTimeFormat
+	if config.TimeFormat != "" {
+		timeFormat = config.TimeFormat
+	}
 	l.SetFormatter(&selfFormatter{
-		timeFormat: defaultTimeFormat,
+		timeFormat: timeFormat,
 	})
 	l.SetReportCaller(true)
 	l.SetOutput(io.MultiWriter(writers...))
