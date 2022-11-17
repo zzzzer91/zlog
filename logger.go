@@ -1,10 +1,15 @@
 package zlog
 
 import (
-	"github.com/sirupsen/logrus"
-	"gopkg.in/natefinch/lumberjack.v2"
 	"io"
 	"os"
+
+	"github.com/sirupsen/logrus"
+	"gopkg.in/natefinch/lumberjack.v2"
+)
+
+const (
+	defaultTimeFormat = "2006-01-02T15:04:05.000Z07"
 )
 
 var logger = NewLogger(
@@ -36,7 +41,7 @@ func NewLogger(config *LoggerConfig, hooks ...logrus.Hook) *logrus.Logger {
 	l.SetNoLock()
 	l.SetLevel(logrus.Level(config.Level))
 	l.SetFormatter(&selfFormatter{
-		timeFormat: "2006-01-02 15:04:05.000",
+		timeFormat: defaultTimeFormat,
 	})
 	l.SetReportCaller(true)
 	l.SetOutput(io.MultiWriter(writers...))
