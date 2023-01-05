@@ -6,14 +6,35 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+var logger = NewLogger(
+	&LoggerConfig{
+		Level:       int(logrus.InfoLevel),
+		TerminalOut: true,
+	},
+	NewTraceHook(&TraceHookConfig{
+		RecordStackTraceInSpan: true,
+		EnableLevels:           logrus.AllLevels,
+		ErrorSpanLevel:         logrus.ErrorLevel,
+	}),
+)
+
+// DefaultLogger return the default logger.
+func DefaultLogger() *Logger {
+	return logger
+}
+
+// SetLogger sets the default logger.
+// Note that this method is not concurrent-safe and must not be called
+// after the use of DefaultLogger and global functions in this package.
+func SetLogger(l *logrus.Logger) {
+	logger = &Logger{l}
+}
+
+// SetLoggerLevel sets log level.
+func SetLoggerLevel(level int) {
+	logger.SetLevel(logrus.Level(level))
+}
+
 func Ctx(ctx context.Context) *logrus.Entry {
-	entry := logger.WithContext(ctx)
-	fields := make(logrus.Fields)
-	if v := ctx.Value(EntityFieldNameTraceID); v != nil {
-		fields[EntityFieldNameTraceID.String()] = v
-	}
-	if v := ctx.Value(EntityFieldNameRequestID); v != nil {
-		fields[EntityFieldNameRequestID.String()] = v
-	}
-	return entry.WithFields(fields)
+	return logger.Ctx(ctx)
 }

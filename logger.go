@@ -1,6 +1,7 @@
 package zlog
 
 import (
+	"context"
 	"io"
 	"os"
 
@@ -8,23 +9,11 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
-const (
-	defaultTimeFormat = "2006-01-02T15:04:05.000Z07"
-)
+type Logger struct {
+	*logrus.Logger
+}
 
-var logger = NewLogger(
-	&LoggerConfig{
-		Level:       int(logrus.InfoLevel),
-		TerminalOut: true,
-	},
-	NewTraceHook(&TraceHookConfig{
-		RecordStackTraceInSpan: true,
-		EnableLevels:           logrus.AllLevels,
-		ErrorSpanLevel:         logrus.ErrorLevel,
-	}),
-)
-
-func NewLogger(config *LoggerConfig, hooks ...logrus.Hook) *logrus.Logger {
+func NewLogger(config *LoggerConfig, hooks ...logrus.Hook) *Logger {
 	var writers []io.Writer
 	if config.TerminalOut {
 		writers = append(writers, os.Stderr)
@@ -52,22 +41,17 @@ func NewLogger(config *LoggerConfig, hooks ...logrus.Hook) *logrus.Logger {
 	for _, hook := range hooks {
 		l.AddHook(hook)
 	}
-	return l
+	return &Logger{l}
 }
 
-// DefaultLogger return the default logger.
-func DefaultLogger() *logrus.Logger {
-	return logger
-}
-
-// SetLogger sets the default logger.
-// Note that this method is not concurrent-safe and must not be called
-// after the use of DefaultLogger and global functions in this package.
-func SetLogger(l *logrus.Logger) {
-	logger = l
-}
-
-// SetLoggerLevel sets log level.
-func SetLoggerLevel(level int) {
-	logger.SetLevel(logrus.Level(level))
+func (l *Logger) Ctx(ctx context.Context) *logrus.Entry {
+	entry := l.Logger.WithContext(ctx)
+	fields := make(logrus.Fields)
+	if v := ctx.Value(EntityFieldNameTraceId); v != nil {
+		fields[EntityFieldNameTraceId.String()] = v
+	}
+	if v := ctx.Value(EntityFieldNameRequestId); v != nil {
+		fields[EntityFieldNameRequestId.String()] = v
+	}
+	return entry.WithFields(fields)
 }

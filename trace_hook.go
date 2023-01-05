@@ -52,7 +52,7 @@ func (h *TraceHook) Fire(entry *logrus.Entry) error {
 	}
 
 	// attach span context to log entry data fields
-	entry.Data[EntityFieldNameTraceID.String()] = span.SpanContext().TraceID()
+	entry.Data[EntityFieldNameTraceId.String()] = span.SpanContext().TraceID()
 
 	// set span status
 	if entry.Level <= h.cfg.ErrorSpanLevel {
