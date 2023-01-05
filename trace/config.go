@@ -1,4 +1,4 @@
-package tracehook
+package trace
 
 import "github.com/sirupsen/logrus"
 
