@@ -11,11 +11,6 @@ var logger = NewLogger(
 		Level:       int(logrus.InfoLevel),
 		TerminalOut: true,
 	},
-	NewTraceHook(&TraceHookConfig{
-		RecordStackTraceInSpan: true,
-		EnableLevels:           logrus.AllLevels,
-		ErrorSpanLevel:         logrus.ErrorLevel,
-	}),
 )
 
 // DefaultLogger return the default logger.

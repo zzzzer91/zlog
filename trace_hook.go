@@ -1,9 +1,6 @@
 package zlog
 
 import (
-	"errors"
-	"strings"
-
 	"github.com/sirupsen/logrus"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
@@ -13,20 +10,13 @@ import (
 
 const (
 	exceptionErrorEventKey = "exception.error"
-	logEventKey            = "log"
-)
-
-var (
-	logSeverityTextKey = attribute.Key("otel.log.severity.text")
-	logMessageKey      = attribute.Key("otel.log.message")
 )
 
 var _ logrus.Hook = (*TraceHook)(nil)
 
 type TraceHookConfig struct {
-	RecordStackTraceInSpan bool
-	EnableLevels           []logrus.Level
-	ErrorSpanLevel         logrus.Level
+	EnableLevels   []logrus.Level
+	ErrorSpanLevel logrus.Level
 }
 
 type TraceHook struct {
@@ -51,9 +41,6 @@ func (h *TraceHook) Fire(entry *logrus.Entry) error {
 		return nil
 	}
 
-	// attach span context to log entry data fields
-	entry.Data[EntityFieldNameTraceId.String()] = span.SpanContext().TraceID()
-
 	// set span status
 	if entry.Level <= h.cfg.ErrorSpanLevel {
 		if err, ok := entry.Data[EntityFieldNameError.String()].(error); ok {
@@ -75,26 +62,15 @@ func (h *TraceHook) Fire(entry *logrus.Entry) error {
 			span.AddEvent(semconv.ExceptionEventName, opts...)
 		} else {
 			span.SetStatus(codes.Error, entry.Message)
-			span.RecordError(errors.New(entry.Message), trace.WithStackTrace(h.cfg.RecordStackTraceInSpan))
+			opts := []trace.EventOption{trace.WithAttributes(
+				semconv.ExceptionMessageKey.String(entry.Message),
+			)}
+			opts = append(opts, trace.WithAttributes(
+				semconv.ExceptionStacktraceKey.String(RecordStackTrace(7)),
+			))
+			span.AddEvent(semconv.ExceptionEventName, opts...)
 		}
-	} else {
-		// attach log to span event attributes
-		attrs := []attribute.KeyValue{
-			logMessageKey.String(entry.Message),
-			logSeverityTextKey.String(otelSeverityText(entry.Level)),
-		}
-		span.AddEvent(logEventKey, trace.WithAttributes(attrs...))
 	}
 
 	return nil
-}
-
-// otelSeverityText convert logrus level to otel severityText
-// ref to https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/logs/data-model.md#severity-fields
-func otelSeverityText(lv logrus.Level) string {
-	s := lv.String()
-	if s == "warning" {
-		s = "warn"
-	}
-	return strings.ToUpper(s)
 }
