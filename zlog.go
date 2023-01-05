@@ -21,8 +21,8 @@ func DefaultLogger() *Logger {
 // SetLogger sets the default logger.
 // Note that this method is not concurrent-safe and must not be called
 // after the use of DefaultLogger and global functions in this package.
-func SetLogger(l *logrus.Logger) {
-	logger = &Logger{l}
+func SetLogger(l *Logger) {
+	logger = l
 }
 
 // SetLoggerLevel sets log level.
