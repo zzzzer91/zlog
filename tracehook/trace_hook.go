@@ -1,7 +1,8 @@
-package zlog
+package tracehook
 
 import (
 	"github.com/sirupsen/logrus"
+	"github.com/zzzzer91/zlog"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	semconv "go.opentelemetry.io/otel/semconv/v1.10.0"
@@ -14,16 +15,18 @@ const (
 
 var _ logrus.Hook = (*TraceHook)(nil)
 
-type TraceHookConfig struct {
-	EnableLevels   []logrus.Level
-	ErrorSpanLevel logrus.Level
-}
-
 type TraceHook struct {
-	cfg *TraceHookConfig
+	cfg *Config
 }
 
-func NewTraceHook(cfg *TraceHookConfig) *TraceHook {
+func NewTraceHook(opts ...Option) *TraceHook {
+	cfg := &Config{
+		EnableLevels:   logrus.AllLevels,
+		ErrorSpanLevel: logrus.ErrorLevel,
+	}
+	for _, o := range opts {
+		o(cfg)
+	}
 	return &TraceHook{cfg: cfg}
 }
 
@@ -43,20 +46,20 @@ func (h *TraceHook) Fire(entry *logrus.Entry) error {
 
 	// set span status
 	if entry.Level <= h.cfg.ErrorSpanLevel {
-		if err, ok := entry.Data[EntityFieldNameError.String()].(error); ok {
+		if err, ok := entry.Data[zlog.EntityFieldNameError.String()].(error); ok {
 			span.SetStatus(codes.Error, err.Error())
 			opts := []trace.EventOption{trace.WithAttributes(
-				semconv.ExceptionTypeKey.String(TypeStr(err)),
+				semconv.ExceptionTypeKey.String(zlog.TypeStr(err)),
 				semconv.ExceptionMessageKey.String(entry.Message),
 				attribute.Key(exceptionErrorEventKey).String(err.Error()),
 			)}
-			if v, ok := entry.Data[EntityFieldNameErrorStack.String()].(string); ok {
+			if v, ok := entry.Data[zlog.EntityFieldNameErrorStack.String()].(string); ok {
 				opts = append(opts, trace.WithAttributes(
 					semconv.ExceptionStacktraceKey.String(v),
 				))
 			} else {
 				opts = append(opts, trace.WithAttributes(
-					semconv.ExceptionStacktraceKey.String(RecordStackTrace(7)),
+					semconv.ExceptionStacktraceKey.String(zlog.RecordStackTrace(7)),
 				))
 			}
 			span.AddEvent(semconv.ExceptionEventName, opts...)
@@ -66,7 +69,7 @@ func (h *TraceHook) Fire(entry *logrus.Entry) error {
 				semconv.ExceptionMessageKey.String(entry.Message),
 			)}
 			opts = append(opts, trace.WithAttributes(
-				semconv.ExceptionStacktraceKey.String(RecordStackTrace(7)),
+				semconv.ExceptionStacktraceKey.String(zlog.RecordStackTrace(7)),
 			))
 			span.AddEvent(semconv.ExceptionEventName, opts...)
 		}
