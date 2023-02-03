@@ -1,6 +1,6 @@
 # zlog
 
-# Usage
+## Usage
 
 ```go
 import (
@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-    // 可选
+	// 可选
 	zlog.SetLogger(zlog.NewLogger(conf.App.Log, trace.NewTraceHook()))
 
 	pwd, _ := os.Getwd()
