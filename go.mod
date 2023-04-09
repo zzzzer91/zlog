@@ -4,7 +4,6 @@ go 1.19
 
 require (
 	github.com/bytedance/sonic v1.8.7
-	github.com/cloudwego/kitex v0.5.1
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.9.0
 	go.opentelemetry.io/otel v1.13.0
