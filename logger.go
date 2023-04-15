@@ -15,10 +15,10 @@ type Logger struct {
 
 func NewLogger(config *LoggerConfig, hooks ...logrus.Hook) *Logger {
 	var writers []io.Writer
-	if config.TerminalOut {
+	if config.TerminalOut == nil || *config.TerminalOut {
 		writers = append(writers, os.Stderr)
 	}
-	if config.FileOut {
+	if config.FileOut != nil && *config.FileOut {
 		writers = append(writers, &lumberjack.Logger{
 			Filename:   config.FileConfig.Path,
 			MaxSize:    config.FileConfig.MaxSize,

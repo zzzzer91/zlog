@@ -8,8 +8,7 @@ import (
 
 var logger = NewLogger(
 	&LoggerConfig{
-		Level:       int(logrus.InfoLevel),
-		TerminalOut: true,
+		Level: int(logrus.InfoLevel),
 	},
 )
 
