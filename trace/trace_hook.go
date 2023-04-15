@@ -21,8 +21,9 @@ type TraceHook struct {
 
 func NewTraceHook(opts ...Option) *TraceHook {
 	cfg := &Config{
-		EnableLevels:   logrus.AllLevels,
-		ErrorSpanLevel: logrus.ErrorLevel,
+		EnableLevels:       logrus.AllLevels,
+		ErrorSpanLevel:     logrus.ErrorLevel,
+		IsRecordErrorStack: true,
 	}
 	for _, o := range opts {
 		o(cfg)
@@ -53,14 +54,16 @@ func (h *TraceHook) Fire(entry *logrus.Entry) error {
 				semconv.ExceptionMessageKey.String(entry.Message),
 				attribute.Key(exceptionErrorEventKey).String(err.Error()),
 			)}
-			if v, ok := entry.Data[zlog.EntityFieldNameErrorStack.String()].(string); ok {
-				opts = append(opts, trace.WithAttributes(
-					semconv.ExceptionStacktraceKey.String(v),
-				))
-			} else {
-				opts = append(opts, trace.WithAttributes(
-					semconv.ExceptionStacktraceKey.String(zlog.RecordStackTrace(7)),
-				))
+			if h.cfg.IsRecordErrorStack {
+				if v, ok := entry.Data[zlog.EntityFieldNameErrorStack.String()].(string); ok {
+					opts = append(opts, trace.WithAttributes(
+						semconv.ExceptionStacktraceKey.String(v),
+					))
+				} else {
+					opts = append(opts, trace.WithAttributes(
+						semconv.ExceptionStacktraceKey.String(zlog.RecordStackTrace(7)),
+					))
+				}
 			}
 			span.AddEvent(semconv.ExceptionEventName, opts...)
 		} else {
@@ -68,9 +71,11 @@ func (h *TraceHook) Fire(entry *logrus.Entry) error {
 			opts := []trace.EventOption{trace.WithAttributes(
 				semconv.ExceptionMessageKey.String(entry.Message),
 			)}
-			opts = append(opts, trace.WithAttributes(
-				semconv.ExceptionStacktraceKey.String(zlog.RecordStackTrace(7)),
-			))
+			if h.cfg.IsRecordErrorStack {
+				opts = append(opts, trace.WithAttributes(
+					semconv.ExceptionStacktraceKey.String(zlog.RecordStackTrace(7)),
+				))
+			}
 			span.AddEvent(semconv.ExceptionEventName, opts...)
 		}
 	}
