@@ -2,9 +2,10 @@ package zlog
 
 import (
 	"fmt"
-	"github.com/bytedance/sonic"
 	"strconv"
 	"sync"
+
+	"github.com/bytedance/sonic"
 
 	"github.com/sirupsen/logrus"
 )
@@ -17,7 +18,7 @@ type selfFormatter struct {
 type logStruct struct {
 	Time        string            `json:"time"`
 	Level       string            `json:"level"`
-	File        string            `json:"file,omitempty"`
+	Caller      string            `json:"caller,omitempty"`
 	Msg         string            `json:"msg,omitempty"`
 	Error       string            `json:"error,omitempty"`
 	ExtraFields map[string]string `json:"extraFields,omitempty"`
@@ -34,7 +35,7 @@ var (
 func (ls *logStruct) reset() {
 	ls.Time = ""
 	ls.Level = ""
-	ls.File = ""
+	ls.Caller = ""
 	ls.Msg = ""
 	ls.Error = ""
 	ls.ExtraFields = nil
@@ -43,16 +44,16 @@ func (ls *logStruct) reset() {
 // Format 实现 formatter 定义的接口，自定义日志格式
 func (f *selfFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	ls := logStructPool.Get().(*logStruct)
+	defer logStructPool.Put(ls)
+	defer ls.reset()
 	ls.Time = entry.Time.Format(f.timeFormat)
 	ls.Level = entry.Level.String()
-	ls.File = entry.Caller.Function + ":" + strconv.Itoa(entry.Caller.Line)
+	ls.Caller = entry.Caller.Function + ":" + strconv.Itoa(entry.Caller.Line)
 	ls.Msg = entry.Message
 	ls.Error = f.exactErrorField(entry.Data)
 	ls.ExtraFields = f.exactExtraFields(entry.Data)
 	// marshal
 	_ = sonic.ConfigDefault.NewEncoder(entry.Buffer).Encode(ls)
-	ls.reset()
-	logStructPool.Put(ls)
 	return entry.Buffer.Bytes(), nil
 }
 

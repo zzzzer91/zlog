@@ -43,13 +43,13 @@ func f(ctx context.Context) error {
 {
   "time": "2023-03-11T11:22:26.801+08",
   "level": "info",
-  "file": "main.main:16",
+  "caller": "main.main:16",
   "msg": "hello starting, current env is pro, pwd is /Users/zzzzer/go/src/github.com/zzzzer91/go-test"
 }
 {
   "time": "2023-03-11T11:22:26.801+08",
   "level": "error",
-  "file": "main.main:20",
+  "caller": "main.main:20",
   "msg": "failed to execute f()",
   "error": "new error",
   "extraFields": {
