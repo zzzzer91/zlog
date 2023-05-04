@@ -16,7 +16,7 @@ type selfFormatter struct {
 }
 
 type logStruct struct {
-	Time        string            `json:"time"`
+	Ts          string            `json:"ts"`
 	Level       string            `json:"level"`
 	Caller      string            `json:"caller,omitempty"`
 	Msg         string            `json:"msg,omitempty"`
@@ -33,7 +33,7 @@ var (
 )
 
 func (ls *logStruct) reset() {
-	ls.Time = ""
+	ls.Ts = ""
 	ls.Level = ""
 	ls.Caller = ""
 	ls.Msg = ""
@@ -46,7 +46,7 @@ func (f *selfFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	ls := logStructPool.Get().(*logStruct)
 	defer logStructPool.Put(ls)
 	defer ls.reset()
-	ls.Time = entry.Time.Format(f.timeFormat)
+	ls.Ts = entry.Time.Format(f.timeFormat)
 	ls.Level = entry.Level.String()
 	ls.Caller = entry.Caller.Function + ":" + strconv.Itoa(entry.Caller.Line)
 	ls.Msg = entry.Message
