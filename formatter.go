@@ -6,6 +6,7 @@ import (
 	"sync"
 
 	"github.com/bytedance/sonic"
+	"github.com/zzzzer91/gopkg/stackx"
 
 	"github.com/sirupsen/logrus"
 )
@@ -63,7 +64,7 @@ func (f *selfFormatter) exactErrorField(data logrus.Fields) string {
 	}
 	if errInfo, ok := data[EntityFieldNameError.String()]; ok {
 		if _, ok := data[EntityFieldNameErrorStack.String()]; !ok {
-			callersFramesStr := CallersFrames2Str(getCallerFramesFromError(errInfo.(error)))
+			callersFramesStr := stackx.GetStackFromError(errInfo.(error))
 			if callersFramesStr != "" {
 				// 放入 entry.Data
 				data[EntityFieldNameErrorStack.String()] = callersFramesStr

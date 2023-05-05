@@ -2,6 +2,8 @@ package trace
 
 import (
 	"github.com/sirupsen/logrus"
+	"github.com/zzzzer91/gopkg/stackx"
+	"github.com/zzzzer91/gopkg/typex"
 	"github.com/zzzzer91/zlog"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
@@ -50,7 +52,7 @@ func (h *TraceHook) Fire(entry *logrus.Entry) error {
 		if err, ok := entry.Data[zlog.EntityFieldNameError.String()].(error); ok {
 			span.SetStatus(codes.Error, err.Error())
 			opts := []trace.EventOption{trace.WithAttributes(
-				semconv.ExceptionTypeKey.String(zlog.TypeStr(err)),
+				semconv.ExceptionTypeKey.String(typex.TypeStr(err)),
 				semconv.ExceptionMessageKey.String(entry.Message),
 				attribute.Key(exceptionErrorEventKey).String(err.Error()),
 			)}
@@ -61,7 +63,7 @@ func (h *TraceHook) Fire(entry *logrus.Entry) error {
 					))
 				} else {
 					opts = append(opts, trace.WithAttributes(
-						semconv.ExceptionStacktraceKey.String(zlog.RecordStackTrace(7)),
+						semconv.ExceptionStacktraceKey.String(stackx.RecordStack(7)),
 					))
 				}
 			}
@@ -73,7 +75,7 @@ func (h *TraceHook) Fire(entry *logrus.Entry) error {
 			)}
 			if h.cfg.IsRecordErrorStack {
 				opts = append(opts, trace.WithAttributes(
-					semconv.ExceptionStacktraceKey.String(zlog.RecordStackTrace(7)),
+					semconv.ExceptionStacktraceKey.String(stackx.RecordStack(7)),
 				))
 			}
 			span.AddEvent(semconv.ExceptionEventName, opts...)
