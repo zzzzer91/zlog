@@ -6,7 +6,7 @@ require (
 	github.com/bytedance/sonic v1.8.8
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.9.0
-	github.com/zzzzer91/gopkg v0.0.0-20230505032855-a3cb107cfc02
+	github.com/zzzzer91/gopkg v0.0.0-20230505041801-df9aeca8ee0a
 	go.opentelemetry.io/otel v1.13.0
 	go.opentelemetry.io/otel/trace v1.13.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
