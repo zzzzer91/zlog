@@ -12,12 +12,12 @@
 package main
 
 import (
-	"context"
-	"os"
+    "context"
+    "os"
 
-	"github.com/pkg/errors"
-	"github.com/zzzzer91/zlog/trace"
-	"github.com/zzzzer91/zlog"
+    "github.com/pkg/errors"
+    "github.com/zzzzer91/zlog/trace"
+    "github.com/zzzzer91/zlog"
 )
 
 func main() {
@@ -42,7 +42,7 @@ func f(ctx context.Context) error {
 {
   "time": "2023-03-11T11:22:26.801+08",
   "level": "error",
-  "caller": "main.main:20",
+  "caller": "main.main:17",
   "msg": "failed to execute f()",
   "error": "new error",
   "extraFields": {
