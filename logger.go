@@ -53,5 +53,8 @@ func (l *Logger) Ctx(ctx context.Context) *logrus.Entry {
 	if v := ctx.Value(EntityFieldNameRequestId); v != nil {
 		fields[EntityFieldNameRequestId.String()] = v
 	}
+	if v := ctx.Value(EntityFieldNameLogId); v != nil {
+		fields[EntityFieldNameLogId.String()] = v
+	}
 	return entry.WithFields(fields)
 }
