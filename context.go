@@ -11,5 +11,9 @@ func CopyContext(ctx context.Context) context.Context {
 	if v := ctx.Value(EntityFieldNameRequestId); v != nil {
 		newCtx = context.WithValue(newCtx, EntityFieldNameRequestId, v)
 	}
+
+	if v := ctx.Value(EntityFieldNameLogId); v != nil {
+		newCtx = context.WithValue(newCtx, EntityFieldNameLogId, v)
+	}
 	return newCtx
 }
