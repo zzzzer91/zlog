@@ -12,7 +12,7 @@ func StartTracing(ctx context.Context, spanName string) (context.Context, trace.
 	var span trace.Span
 	ctx, span = otel.Tracer("github.com/zzzzer91/zlog").Start(ctx, spanName)
 	if span.IsRecording() {
-		ctx = context.WithValue(ctx, zlog.EntityFieldNameTraceId, span.SpanContext().TraceID())
+		ctx = context.WithValue(ctx, zlog.EntityFieldNameTraceId, span.SpanContext().TraceID().String())
 	}
 	return ctx, span
 }
