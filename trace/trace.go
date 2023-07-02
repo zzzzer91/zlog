@@ -16,3 +16,8 @@ func StartTracing(ctx context.Context, spanName string) (context.Context, trace.
 	}
 	return ctx, span
 }
+
+// CopyContext 拷贝基本字段的同时，拷贝 trace 信息
+func CopyContext(ctx context.Context) context.Context {
+	return trace.ContextWithSpan(zlog.CopyContext(ctx), trace.SpanFromContext(ctx))
+}
