@@ -10,9 +10,11 @@ import (
 
 func StartTracing(ctx context.Context, spanName string) (context.Context, trace.Span) {
 	var span trace.Span
-	ctx, span = otel.Tracer("github.com/zzzzer91/zlog").Start(ctx, spanName)
+	ctx, span = otel.Tracer("github.com/zzzzer91/zlog").
+		Start(ctx, spanName, trace.WithSpanKind(trace.SpanKindClient))
 	if span.IsRecording() {
-		ctx = context.WithValue(ctx, zlog.EntityFieldNameTraceId, span.SpanContext().TraceID().String())
+		ctx = context.WithValue(ctx,
+			zlog.EntityFieldNameTraceId, span.SpanContext().TraceID().String())
 	}
 	return ctx, span
 }
