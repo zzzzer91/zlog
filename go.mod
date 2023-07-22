@@ -1,12 +1,12 @@
 module github.com/zzzzer91/zlog
 
-go 1.19
+go 1.20
 
 require (
 	github.com/bytedance/sonic v1.9.2
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.9.3
-	github.com/zzzzer91/gopkg v0.0.0-20230530033451-492ee78ce91b
+	github.com/zzzzer91/gopkg v0.0.0-20230722101607-3d0b64beb88f
 	go.opentelemetry.io/otel v1.16.0
 	go.opentelemetry.io/otel/trace v1.16.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1

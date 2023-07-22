@@ -34,8 +34,8 @@ github.com/stretchr/testify v1.8.1/go.mod h1:w2LPCIKwWwSfY2zedu0+kehJoqGctiVI29o
 github.com/stretchr/testify v1.8.3 h1:RP3t2pwF7cMEbC1dqtB6poj3niw/9gnV4Cjg5oW5gtY=
 github.com/twitchyliquid64/golang-asm v0.15.1 h1:SU5vSMR7hnwNxj24w34ZyCi/FmDZTkS4MhqMhdFk5YI=
 github.com/twitchyliquid64/golang-asm v0.15.1/go.mod h1:a1lVb/DtPvCB8fslRZhAngC2+aY1QWCk3Cedj/Gdt08=
-github.com/zzzzer91/gopkg v0.0.0-20230530033451-492ee78ce91b h1:rcpcNo+9fD6yGf7tuCspqrQ6MyVVlG5R3k11GfUv9ZE=
-github.com/zzzzer91/gopkg v0.0.0-20230530033451-492ee78ce91b/go.mod h1:D8eDEU5IbSGPNVEdaISlyUgNs34exvEznQ6gpflpUp0=
+github.com/zzzzer91/gopkg v0.0.0-20230722101607-3d0b64beb88f h1:0H4waOKW8VG1ZXVSzpGhfxgYEhNwWjKpNhMSlBfKB0w=
+github.com/zzzzer91/gopkg v0.0.0-20230722101607-3d0b64beb88f/go.mod h1:SZtEj+IMvL+ucxlKIaWtyKPOiI6fPlObErJw9APn8+M=
 go.opentelemetry.io/otel v1.16.0 h1:Z7GVAX/UkAXPKsy94IU+i6thsQS4nb7LviLpnaNeW8s=
 go.opentelemetry.io/otel v1.16.0/go.mod h1:vl0h9NUa1D5s1nv3A5vZOYWn8av4K8Ml6JDeHrT/bx4=
 go.opentelemetry.io/otel/metric v1.16.0 h1:RbrpwVG1Hfv85LgnZ7+txXioPDoh6EdbZHo26Q3hqOo=
