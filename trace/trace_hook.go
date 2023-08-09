@@ -63,7 +63,7 @@ func (h *TraceHook) Fire(entry *logrus.Entry) error {
 					))
 				} else {
 					opts = append(opts, trace.WithAttributes(
-						semconv.ExceptionStacktraceKey.String(stackx.RecordStack(7)),
+						semconv.ExceptionStacktraceKey.String(stackx.StackToString(stackx.Callers(7))),
 					))
 				}
 			}
@@ -75,7 +75,7 @@ func (h *TraceHook) Fire(entry *logrus.Entry) error {
 			)}
 			if h.cfg.IsRecordErrorStack {
 				opts = append(opts, trace.WithAttributes(
-					semconv.ExceptionStacktraceKey.String(stackx.RecordStack(7)),
+					semconv.ExceptionStacktraceKey.String(stackx.StackToString(stackx.Callers(7))),
 				))
 			}
 			span.AddEvent(semconv.ExceptionEventName, opts...)

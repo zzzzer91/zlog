@@ -64,7 +64,7 @@ func (f *selfFormatter) exactErrorField(data logrus.Fields) string {
 	}
 	if errInfo, ok := data[EntityFieldNameError.String()]; ok {
 		if _, ok := data[EntityFieldNameErrorStack.String()]; !ok {
-			callersFramesStr := stackx.GetStackFromError(errInfo.(error))
+			callersFramesStr := stackx.GetStackStringFromError(errInfo.(error))
 			if callersFramesStr != "" {
 				// 放入 entry.Data
 				data[EntityFieldNameErrorStack.String()] = callersFramesStr
