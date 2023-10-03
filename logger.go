@@ -47,14 +47,14 @@ func NewLogger(config *LoggerConfig, hooks ...logrus.Hook) *Logger {
 func (l *Logger) Ctx(ctx context.Context) *logrus.Entry {
 	entry := l.Logger.WithContext(ctx)
 	fields := make(logrus.Fields)
-	if v := ctx.Value(EntityFieldNameTraceId); v != nil {
-		fields[EntityFieldNameTraceId.String()] = v
+	if v := ctx.Value(EntityFieldNameTraceID); v != nil {
+		fields[EntityFieldNameTraceID.String()] = v
 	}
-	if v := ctx.Value(EntityFieldNameRequestId); v != nil {
-		fields[EntityFieldNameRequestId.String()] = v
+	if v := ctx.Value(EntityFieldNameRequestID); v != nil {
+		fields[EntityFieldNameRequestID.String()] = v
 	}
-	if v := ctx.Value(EntityFieldNameLogId); v != nil {
-		fields[EntityFieldNameLogId.String()] = v
+	if v := ctx.Value(EntityFieldNameLogID); v != nil {
+		fields[EntityFieldNameLogID.String()] = v
 	}
 	return entry.WithFields(fields)
 }

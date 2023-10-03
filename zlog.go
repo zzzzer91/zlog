@@ -3,8 +3,8 @@ package zlog
 import (
 	"context"
 
-	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
+	"github.com/zzzzer91/gopkg/uuidx"
 )
 
 var logger = NewLogger(
@@ -34,9 +34,9 @@ func Ctx(ctx context.Context) *logrus.Entry {
 	return logger.Ctx(ctx)
 }
 
-func AddLogIdToCtx(ctx context.Context) context.Context {
-	if v := ctx.Value(EntityFieldNameLogId); v == nil {
-		ctx = context.WithValue(ctx, EntityFieldNameLogId, uuid.New().String())
+func AddLogIDToCtx(ctx context.Context) context.Context {
+	if v := ctx.Value(EntityFieldNameLogID); v == nil {
+		ctx = context.WithValue(ctx, EntityFieldNameLogID, uuidx.New())
 	}
 	return ctx
 }
@@ -44,14 +44,14 @@ func AddLogIdToCtx(ctx context.Context) context.Context {
 // CopyContext 只保留原来 context 中指定字段
 func CopyContext(ctx context.Context) context.Context {
 	newCtx := context.Background()
-	if v := ctx.Value(EntityFieldNameTraceId); v != nil {
-		newCtx = context.WithValue(newCtx, EntityFieldNameTraceId, v)
+	if v := ctx.Value(EntityFieldNameTraceID); v != nil {
+		newCtx = context.WithValue(newCtx, EntityFieldNameTraceID, v)
 	}
-	if v := ctx.Value(EntityFieldNameRequestId); v != nil {
-		newCtx = context.WithValue(newCtx, EntityFieldNameRequestId, v)
+	if v := ctx.Value(EntityFieldNameRequestID); v != nil {
+		newCtx = context.WithValue(newCtx, EntityFieldNameRequestID, v)
 	}
-	if v := ctx.Value(EntityFieldNameLogId); v != nil {
-		newCtx = context.WithValue(newCtx, EntityFieldNameLogId, v)
+	if v := ctx.Value(EntityFieldNameLogID); v != nil {
+		newCtx = context.WithValue(newCtx, EntityFieldNameLogID, v)
 	}
 	return newCtx
 }

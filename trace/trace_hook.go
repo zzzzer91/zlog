@@ -17,6 +17,7 @@ const (
 
 var _ logrus.Hook = (*TraceHook)(nil)
 
+//nolint:revive
 type TraceHook struct {
 	cfg *Config
 }

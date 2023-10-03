@@ -23,8 +23,8 @@ import (
 func main() {
     // 可选，加入链路追踪，然后可以在 jager 中看到日志
     // zlog.SetLogger(zlog.NewLogger(conf.App.Log, trace.NewTraceHook()))
-    ctx := context.WithValue(context.Background(), zlog.EntityFieldNameRequestId, "abcdefghijk")
-    ctx = context.WithValue(ctx, zlog.EntityFieldNameTraceId, "123456789")
+    ctx := context.WithValue(context.Background(), zlog.EntityFieldNameRequestID, "abcdefghijk")
+    ctx = context.WithValue(ctx, zlog.EntityFieldNameTraceID, "123456789")
     err := f(ctx)
     if err != nil {
         zlog.Ctx(ctx).WithError(err).Error("failed to execute f()")
@@ -47,8 +47,8 @@ func f(ctx context.Context) error {
   "error": "new error",
   "extraFields": {
     "errorStack": ""main.f:22\nmain.main:15\nruntime.main:250"",
-    "requestID": "abcdefghijk",
-    "traceID": "123456789"
+    "requestId": "abcdefghijk",
+    "traceId": "123456789"
   }
 }
 ```

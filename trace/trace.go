@@ -14,7 +14,7 @@ func StartTracing(ctx context.Context, spanName string) (context.Context, trace.
 		Start(ctx, spanName, trace.WithSpanKind(trace.SpanKindClient))
 	if span.IsRecording() {
 		ctx = context.WithValue(ctx,
-			zlog.EntityFieldNameTraceId, span.SpanContext().TraceID().String())
+			zlog.EntityFieldNameTraceID, span.SpanContext().TraceID().String())
 	}
 	return ctx, span
 }
